@@ -13,10 +13,10 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const res = await axios.post("http://localhost:3000/api/auth/login", {
-      email,
-      password,
-    });
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/api/auth/login`,
+      { email, password }
+    );
 
     dispatch(loginSuccess(res.data));
     navigate("/quizzes");

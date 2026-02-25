@@ -21,9 +21,10 @@ function QuizListPage() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/quizzes", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/quizzes`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         dispatch(setQuizzes(res.data));
       } catch (error) {
         console.error("Error fetching quizzes:", error);
@@ -40,14 +41,15 @@ function QuizListPage() {
     if (window.confirm("Are you sure you want to delete this quiz?")) {
       try {
         await axios.delete(
-          `http://localhost:3000/api/quizzes/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/quizzes/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // reload list
-        const res = await axios.get("http://localhost:3000/api/quizzes", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/quizzes`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         dispatch(setQuizzes(res.data));
       } catch (error) {
@@ -67,14 +69,15 @@ function QuizListPage() {
 
     try {
       await axios.post(
-        "http://localhost:3000/api/quizzes",
+        `${process.env.REACT_APP_API_URL}/api/quizzes`,
         { title, description: description || "" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const res = await axios.get("http://localhost:3000/api/quizzes", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/quizzes`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       dispatch(setQuizzes(res.data));
     } catch (error) {

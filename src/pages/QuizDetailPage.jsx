@@ -26,9 +26,10 @@ function QuizDetailPage() {
   // Fetch questions
   const fetchQuestions = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/questions/quiz/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/questions/quiz/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setQuestions(res.data || []);
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -105,14 +106,16 @@ function QuizDetailPage() {
     try {
       if (isEditing) {
         await axios.put(
-          `http://localhost:3000/api/questions/${editingQuestionId}`,
+          `${process.env.REACT_APP_API_URL}/api/questions/${editingQuestionId}`,
           payload,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        await axios.post("http://localhost:3000/api/questions", payload, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/questions`,
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       }
 
       resetForm();
@@ -125,9 +128,10 @@ function QuizDetailPage() {
   const handleDelete = async (qId) => {
     if (!window.confirm("Xác nhận xóa câu hỏi này?")) return;
     try {
-      await axios.delete(`http://localhost:3000/api/questions/${qId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/questions/${qId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       fetchQuestions();
     } catch (err) {
       alert("Lỗi xóa: " + (err.response?.data?.message || err.message));
