@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -24,7 +24,7 @@ function QuizDetailPage() {
   const isAdmin = user?.admin === true;
 
   // Fetch questions
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/api/questions/quiz/${id}`,
@@ -34,11 +34,11 @@ function QuizDetailPage() {
     } catch (error) {
       console.error("Error fetching questions:", error);
     }
-  };
+  }, [id, token]);
 
   useEffect(() => {
     if (token) fetchQuestions();
-  }, [id, token]);
+  }, [id, token, fetchQuestions]);
 
   // ─── Form handlers ────────────────────────────────────────
   const handleTextChange = (e) => {
@@ -153,6 +153,7 @@ function QuizDetailPage() {
     setShowResults(true);
     
     const percent = Math.round((calculatedScore / questions.length) * 100);
+    console.log(`Quiz completed with ${percent}% score`);
     
     // Scroll to results
     setTimeout(() => {
@@ -395,7 +396,6 @@ function QuizDetailPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {questions.map((q, index) => {
-            const isAnswered = answers[q._id] !== undefined;
             const isCorrect = showResults && answers[q._id] === q.correctAnswerIndex;
             
             return (
